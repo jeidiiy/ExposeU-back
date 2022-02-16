@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import wscrg.exposeuback.security.filter.AjaxLoginProcessingFilter
 import wscrg.exposeuback.security.handler.AjaxAccessDeniedHandler
 import wscrg.exposeuback.security.handler.AjaxAuthenticationFailureHandler
@@ -25,9 +28,23 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
+        http.cors().configurationSource(corsConfigurationSource())
 
         http.addFilterBefore(ajaxAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
         ajaxConfigurer(http)
+    }
+
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val corsConfiguration = CorsConfiguration()
+
+        corsConfiguration.addAllowedHeader("*")
+        corsConfiguration.addAllowedMethod("*")
+        corsConfiguration.addAllowedOriginPattern("*")
+        corsConfiguration.allowCredentials = true
+
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", corsConfiguration)
+        return source
     }
 
     private fun ajaxConfigurer(http: HttpSecurity) {
