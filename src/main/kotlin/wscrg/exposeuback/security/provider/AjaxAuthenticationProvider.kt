@@ -38,15 +38,13 @@ class AjaxAuthenticationProvider(
             if (!userDetails.isEnabled) {
                 throw BadCredentialsException("This user is not confirmed.")
             }
-        } catch (e: UsernameNotFoundException) {
-            log.info(e.toString())
-            throw UsernameNotFoundException(e.message)
-        } catch (e: BadCredentialsException) {
-            log.info(e.toString())
-            throw BadCredentialsException(e.message)
         } catch (e: Exception) {
             log.info(e.toString())
-            throw RuntimeException(e.message)
+            when (e) {
+                is UsernameNotFoundException -> throw UsernameNotFoundException(e.message)
+                is BadCredentialsException -> throw BadCredentialsException(e.message)
+                is RuntimeException -> throw RuntimeException(e.message)
+            }
         }
 
         val userDto = UserDto.Builder().email(email).password(password).build()
