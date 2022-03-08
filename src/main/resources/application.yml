@@ -11,3 +11,18 @@ spring:
     hibernate:
       ddl-auto: create
     defer-datasource-initialization: true
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+file:
+  dir: "e:/exportU-upload-file/"
