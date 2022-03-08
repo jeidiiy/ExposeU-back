@@ -5,18 +5,16 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "users")
-class User(
+class User private constructor(
     email: String,
-    name: String,
+    username: String,
     password: String,
     phoneNumber: String?,
-    image: Image?,
-    portfolio: Portfolio?
+    image: UploadFile?
 ) : BaseTimeEntity() {
-
     companion object {
         fun of(dto: UserSignUpRequestDto) = with(dto) {
-            UserBuilder(email = email, password = password, name = name).image(image).build()
+            UserBuilder(email = email, password = password, username = username).image(image).build()
         }
     }
 
@@ -30,7 +28,7 @@ class User(
         protected set
 
     @Column(nullable = false)
-    var name = name
+    var username = username
         protected set
 
     @Column(nullable = false)
@@ -38,13 +36,8 @@ class User(
         protected set
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "IMAGE_ID", nullable = true)
+    @JoinColumn(name = "UPLOAD_FILE_ID", nullable = false)
     var image = image
-        protected set
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PORTFOLIO_ID", nullable = true)
-    var portfolio = portfolio
         protected set
 
     @Column(nullable = true)
@@ -53,12 +46,11 @@ class User(
 
     class UserBuilder(
         private var email: String,
-        private var password: String,
-        private var name: String
+        private var username: String,
+        private var password: String
     ) {
         private var phoneNumber: String? = null
-        private var image: Image? = null
-        private var portfolio: Portfolio? = null
+        private var image: UploadFile? = null
 
         fun email(email: String) = apply {
             this.email = email
@@ -68,22 +60,25 @@ class User(
             this.password = password
         }
 
-        fun name(name: String) = apply {
-            this.name = name
+        fun username(username: String) = apply {
+            this.username = username
         }
 
         fun phoneNumber(phoneNumber: String?) = apply {
             this.phoneNumber = phoneNumber
         }
 
-        fun image(image: Image?) = apply {
+        fun image(image: UploadFile?) = apply {
             this.image = image
         }
 
-        fun portfolio(portfolio: Portfolio?) = apply {
-            this.portfolio = portfolio
-        }
-
-        fun build() = User(email, password, name, phoneNumber, image, portfolio)
+        fun build() =
+            User(
+                email = email,
+                username = username,
+                password = password,
+                phoneNumber = phoneNumber,
+                image = image
+            )
     }
 }
