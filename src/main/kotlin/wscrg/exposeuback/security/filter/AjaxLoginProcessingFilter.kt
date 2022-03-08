@@ -27,7 +27,7 @@ class AjaxLoginProcessingFilter : AbstractAuthenticationProcessingFilter(
 
         val requestDto = objectMapper.readValue(request.reader, UserLoginRequestDto::class.java)
         if (!StringUtils.hasLength(requestDto.email) || !StringUtils.hasLength(requestDto.password)) {
-            throw AuthenticationServiceException("Username or Password ot provided")
+            throw AuthenticationServiceException("Username or Password not provided")
         }
 
         val ajaxAuthenticationToken = AjaxAuthenticationToken.of(requestDto)

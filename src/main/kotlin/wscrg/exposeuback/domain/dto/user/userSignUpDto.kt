@@ -1,13 +1,19 @@
 package wscrg.exposeuback.domain.dto.user
 
-import wscrg.exposeuback.domain.entity.Image
+import wscrg.exposeuback.domain.entity.UploadFile
 import wscrg.exposeuback.domain.entity.User
+
+data class UserForm(
+    var email: String,
+    var password: String,
+    var username: String,
+)
 
 data class UserSignUpRequestDto(
     var email: String,
     var password: String,
-    var name: String,
-    var image: Image?
+    var username: String,
+    var image: UploadFile?
 )
 
 data class UserSignUpResponseDto(

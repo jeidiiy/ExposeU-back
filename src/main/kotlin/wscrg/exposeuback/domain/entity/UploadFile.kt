@@ -6,11 +6,19 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-class Portfolio(
-    var content: String
-): BaseTimeEntity() {
+class UploadFile(
+    uploadFileName: String?,
+    storeFileName: String?,
+) : BaseTimeEntity() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
+        protected set
+
+    var uploadFileName: String? = null
+        protected set
+
+    var storeFileName: String? = null
+        protected set
 }

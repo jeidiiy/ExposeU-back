@@ -7,8 +7,10 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
@@ -18,6 +20,8 @@ import wscrg.exposeuback.security.handler.AjaxAccessDeniedHandler
 import wscrg.exposeuback.security.handler.AjaxAuthenticationFailureHandler
 import wscrg.exposeuback.security.handler.AjaxAuthenticationSuccessHandler
 import wscrg.exposeuback.security.provider.AjaxAuthenticationProvider
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @EnableWebSecurity
 @Configuration
@@ -26,11 +30,26 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
     lateinit var ajaxAuthenticationProvider: AjaxAuthenticationProvider
 
+    override fun configure(web: WebSecurity?) {
+        web?.ignoring()?.antMatchers("/css/**", "/js/**", "/img/**")
+    }
+
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
+        http.headers().frameOptions().disable()
         http.cors().configurationSource(corsConfigurationSource())
+        http.authorizeRequests().antMatchers("/", "/h2-console/**").permitAll()
 
         http.addFilterBefore(ajaxAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
+
+        http
+            .logout()
+            .logoutUrl("/logout")
+            .logoutSuccessHandler { _: HttpServletRequest, httpServletResponse: HttpServletResponse, _: Authentication? ->
+                httpServletResponse.status = HttpServletResponse.SC_OK
+            }
+            .deleteCookies("JSESSIONID")
+
         ajaxConfigurer(http)
     }
 

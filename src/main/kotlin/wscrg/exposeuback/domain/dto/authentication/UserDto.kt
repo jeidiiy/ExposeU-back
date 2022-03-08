@@ -1,22 +1,27 @@
 package wscrg.exposeuback.domain.dto.authentication
 
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
 
 class UserDto(
     private val email: String,
-    private val password: String
+    private val username: String,
+    private val password: String,
+    private val authorities: MutableCollection<SimpleGrantedAuthority>
 ) : Serializable, UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         //TODO: 권한 관련 설계 후 작성
-        return mutableListOf()
+        return authorities
     }
 
     override fun getPassword(): String = password
 
-    override fun getUsername(): String = email
+    override fun getUsername(): String = username
+
+    fun getEmail(): String = email
 
     override fun isAccountNonExpired(): Boolean = true
 
@@ -28,8 +33,9 @@ class UserDto(
 
     class Builder {
 
-        private var email: String = ""
-        private var password: String = ""
+        private var email = ""
+        private var password = ""
+        private var username = ""
 
         fun email(email: String) = apply {
             this.email = email
@@ -39,6 +45,10 @@ class UserDto(
             this.password = password
         }
 
-        fun build() = UserDto(email, password)
+        fun username(username: String) = apply {
+            this.username = username
+        }
+
+        fun build() = UserDto(email, username, password, mutableSetOf(SimpleGrantedAuthority("ROLE_USER")))
     }
 }

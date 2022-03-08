@@ -26,10 +26,10 @@ class AjaxAuthenticationProvider(
     override fun authenticate(authentication: Authentication): Authentication {
 
         val (email, password) = authentication.principal as UserLoginRequestDto
-        val userDetails: UserDetails?
+        val userDetails: UserDto?
 
         try {
-            userDetails = userDetailsService.loadUserByUsername(email)
+            userDetails = userDetailsService.loadUserByUsername(email) as? UserDto
 
             if (userDetails === null || !passwordEncoder.matches(password, userDetails.password)) {
                 throw BadCredentialsException("Invalid password")
@@ -43,11 +43,11 @@ class AjaxAuthenticationProvider(
             when (e) {
                 is UsernameNotFoundException -> throw UsernameNotFoundException(e.message)
                 is BadCredentialsException -> throw BadCredentialsException(e.message)
-                is RuntimeException -> throw RuntimeException(e.message)
+                else -> throw RuntimeException(e.message)
             }
         }
 
-        val userDto = UserDto.Builder().email(email).password(password).build()
+        val userDto = UserDto.Builder().email(email).username(userDetails.username).password(password).build()
         return AjaxAuthenticationToken(userDto, userDto.password, userDto.authorities)
     }
 
