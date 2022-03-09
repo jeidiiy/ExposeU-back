@@ -22,6 +22,8 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+    implementation("io.springfox:springfox-boot-starter:3.0.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
