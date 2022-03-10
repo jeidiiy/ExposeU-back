@@ -1,4 +1,4 @@
-package wscrg.exposeuback.api
+package wscrg.exposeuback.api.user.controller
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType.*

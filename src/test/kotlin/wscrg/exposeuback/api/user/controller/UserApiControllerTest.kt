@@ -1,4 +1,4 @@
-package wscrg.exposeuback.api
+package wscrg.exposeuback.api.user.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
