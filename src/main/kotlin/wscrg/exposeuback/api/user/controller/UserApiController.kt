@@ -1,16 +1,15 @@
-package wscrg.exposeuback.api
+package wscrg.exposeuback.api.user.controller
 
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType.*
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextImpl
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import wscrg.exposeuback.domain.dto.authentication.UserDto
-import wscrg.exposeuback.domain.entity.UploadFile
 import wscrg.exposeuback.domain.dto.user.UserForm
 import wscrg.exposeuback.domain.dto.user.UserSignUpRequestDto
 import wscrg.exposeuback.domain.dto.user.UserSignUpResponseDto
+import wscrg.exposeuback.domain.entity.UploadFile
 import wscrg.exposeuback.service.UploadFileService
 import wscrg.exposeuback.service.UserService
 import wscrg.exposeuback.util.FileUtil
@@ -29,10 +28,11 @@ class UserApiController(
     @PostMapping
     fun signUp(
         @RequestPart("user-data") userForm: UserForm,
-        @RequestPart("file-data") image: MultipartFile
+        @RequestPart("file-data") image: MultipartFile?
     ): ResponseEntity<UserSignUpResponseDto> {
+        //TODO: 이미지가 업로드되지 않으면 디폴트 이미지를 사용하기
         val storeFile: UploadFile =
-            fileUtil.storeFile(image) ?: throw IllegalStateException("Image is not submitted.")
+            fileUtil.storeFile(image) ?: throw IllegalArgumentException("Image is not submitted.")
 
         uploadFileService.save(storeFile)
 
