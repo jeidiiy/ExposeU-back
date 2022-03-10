@@ -37,7 +37,13 @@ internal class UserApiControllerTest private constructor(
         )
 
         val content =
-            objectMapper.writeValueAsString(UserForm(email = "abcdefu@google.com", username = "jiji", password = "1234"))
+            objectMapper.writeValueAsString(
+                UserForm(
+                    email = "abcdefu@google.com",
+                    username = "jiji",
+                    password = "1234"
+                )
+            )
 
         val json = MockMultipartFile(
             "user-data",
@@ -60,5 +66,37 @@ internal class UserApiControllerTest private constructor(
         val response = result.response
         log.info("response content-type: {}", response.contentType)
         log.info("response content: {}", response.contentAsString)
+    }
+
+    @Test
+    fun image_미업로드시_400_응답() {
+        //given
+        //file-data 없음
+        val content =
+            objectMapper.writeValueAsString(
+                UserForm(
+                    email = "abcdefu@google.com",
+                    username = "jiji",
+                    password = "1234"
+                )
+            )
+
+        val json = MockMultipartFile(
+            "user-data",
+            "jsonData",
+            MediaType.APPLICATION_JSON_VALUE,
+            content.toByteArray()
+        )
+
+        //when
+        val requestBuilder = multipart("/api/users")
+            .file(json)
+            .contentType(MediaType.MULTIPART_MIXED_VALUE)
+            .characterEncoding("UTF-8")
+
+        val perform = mockMvc.perform(requestBuilder)
+
+        //then
+        val result = perform.andExpect(status().isBadRequest)
     }
 }
