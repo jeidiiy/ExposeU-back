@@ -40,7 +40,7 @@ internal class UserApiControllerTest private constructor(
         val perform = mockMvc.perform(requestBuilder)
 
         //then
-        val result = perform.andExpect(status().isOk).andReturn()
+        val result = perform.andExpect(status().isCreated).andReturn()
         val response = result.response
         log.info("response content-type: {}", response.contentType)
         log.info("response content: {}", response.contentAsString)
@@ -95,7 +95,7 @@ internal class UserApiControllerTest private constructor(
         )
 
         //then
-        resultActions.andExpect(status().isOk)
+        resultActions.andExpect(status().isNoContent)
     }
 
     fun createMockUser(hasImage: Boolean): MockHttpServletRequestBuilder {
