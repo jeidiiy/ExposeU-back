@@ -52,4 +52,9 @@ class UserApiController(
         val userDto = securityContextImpl.authentication.principal as UserDto
         return ResponseEntity.ok(userDto)
     }
+
+    @DeleteMapping("/{id}")
+    fun quit(@PathVariable id: Long) {
+        userService.delete(id)
+    }
 }
