@@ -25,5 +25,4 @@ class UserService(
     }
 
     fun delete(id: Long) = userRepository.deleteById(id)
-
 }

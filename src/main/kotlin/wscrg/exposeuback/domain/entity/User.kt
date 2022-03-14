@@ -35,7 +35,7 @@ class User private constructor(
     var password = password
         protected set
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     @JoinColumn(name = "UPLOAD_FILE_ID", nullable = false)
     var image = image
         protected set
