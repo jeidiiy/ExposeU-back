@@ -41,7 +41,7 @@ class UserApiController(
         }
 
         val savedUser = userService.save(userRequestDto)
-        return ResponseEntity.ok(UserSignUpResponseDto.of(savedUser))
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserSignUpResponseDto.of(savedUser))
     }
 
     @GetMapping("/authentication")
@@ -54,7 +54,8 @@ class UserApiController(
     }
 
     @DeleteMapping("/{id}")
-    fun quit(@PathVariable id: Long) {
+    fun quit(@PathVariable id: Long): ResponseEntity<Void> {
         userService.delete(id)
+        return ResponseEntity.noContent().build()
     }
 }
