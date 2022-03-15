@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import wscrg.exposeuback.domain.dto.authentication.UserDto
 import wscrg.exposeuback.domain.dto.user.UserForm
+import wscrg.exposeuback.domain.dto.user.UserResponseDto
 import wscrg.exposeuback.domain.dto.user.UserSignUpRequestDto
 import wscrg.exposeuback.domain.dto.user.UserSignUpResponseDto
 import wscrg.exposeuback.domain.entity.UploadFile
@@ -23,7 +24,13 @@ class UserApiController(
     val fileUtil: FileUtil
 ) {
     @GetMapping("/{id}")
-    fun getUser(@PathVariable id: Long) = userService.findById(id)
+    fun getUser(@PathVariable id: Long): ResponseEntity<UserResponseDto> {
+        val foundUser = userService.findById(id)
+
+        return with(foundUser) {
+            ResponseEntity.ok(UserResponseDto(id = id, email = email, username = username, image = image))
+        }
+    }
 
     @PostMapping
     fun signUp(

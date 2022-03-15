@@ -1,7 +1,5 @@
 package wscrg.exposeuback.service
 
-import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,7 +14,7 @@ class UserService(
 ) {
     fun findById(id: Long): User =
         userRepository.findByIdOrNull(id)
-            ?: throw UsernameNotFoundException(String.format("No user was founded. id: %s", id))
+            ?: throw IllegalArgumentException(String.format("No user was founded. id: %s", id))
 
     @Transactional
     fun save(userRequestDto: UserSignUpRequestDto): User {
