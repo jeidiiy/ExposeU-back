@@ -81,4 +81,8 @@ class User private constructor(
                 image = image
             )
     }
+
+    override fun toString(): String {
+        return "User(id=$id, email='$email', username='$username', image=$image, phoneNumber=$phoneNumber)"
+    }
 }

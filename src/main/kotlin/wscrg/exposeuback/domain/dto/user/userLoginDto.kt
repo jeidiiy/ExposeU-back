@@ -2,8 +2,7 @@ package wscrg.exposeuback.domain.dto.user
 
 data class UserLoginRequestDto(
     val email: String,
-    val password: String,
-    val jsessionId: String?
+    val password: String
 )
 
 data class UserLoginResponseDto(

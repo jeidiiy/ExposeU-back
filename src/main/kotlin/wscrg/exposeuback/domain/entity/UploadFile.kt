@@ -21,4 +21,9 @@ class UploadFile(
 
     var storeFileName: String? = null
         protected set
+
+    override fun toString(): String {
+        return "UploadFile(id=$id, uploadFileName=$uploadFileName, storeFileName=$storeFileName)"
+    }
+
 }
