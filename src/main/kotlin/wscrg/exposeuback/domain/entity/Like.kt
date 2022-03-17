@@ -26,4 +26,24 @@ class Like(
     override fun toString(): String {
         return "Like(id=$id, user=$user, image=$image)"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Like
+
+        if (id != other.id) return false
+        if (user != other.user) return false
+        if (image != other.image) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + user.hashCode()
+        result = 31 * result + image.hashCode()
+        return result
+    }
 }

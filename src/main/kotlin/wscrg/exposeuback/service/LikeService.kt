@@ -22,12 +22,24 @@ class LikeService(
         val user = userRepository.findByEmail(userDto.getEmail())
             ?: throw UsernameNotFoundException("No user with this email: ${userDto.getEmail()}")
 
-        return if (isNotAlreadyLike(user, uploadFile)) {
+        return if (!isAlreadyLike(user, uploadFile)) {
             likeRepository.save(Like(user = user, image = uploadFile))
             true
         } else false
     }
 
-    private fun isNotAlreadyLike(user: User, image: UploadFile): Boolean =
-        likeRepository.findByUserAndImage(user, image).isEmpty
+    fun subLike(userDto: UserDto, imageId: Long): Boolean {
+        val uploadFile = uploadFileRepository.findById(imageId).orElseThrow()
+
+        val user = userRepository.findByEmail(userDto.getEmail())
+            ?: throw UsernameNotFoundException("No user with this email: ${userDto.getEmail()}")
+
+        return if (isAlreadyLike(user, uploadFile)) {
+            likeRepository.delete(likeRepository.findByUserAndImage(user, uploadFile).get())
+            true
+        } else false
+    }
+
+    private fun isAlreadyLike(user: User, image: UploadFile): Boolean =
+        likeRepository.findByUserAndImage(user, image).isPresent
 }
